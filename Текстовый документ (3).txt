@@ -1,0 +1,236 @@
+import java.util.Objects;
+
+abstract class Vehicle {
+    private int vehicleId;
+    private String brand;
+    private String model;
+    private double pricePerDay;
+
+    public Vehicle(int vehicleId, String brand, String model, double pricePerDay) {
+        this.vehicleId = vehicleId;
+        this.brand = brand;
+        this.model = model;
+        this.pricePerDay = pricePerDay;
+    }
+
+    public int getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(int vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public double getPricePerDay() {
+        return pricePerDay;
+    }
+
+    public void setPricePerDay(double pricePerDay) {
+        this.pricePerDay = pricePerDay;
+    }
+
+    public abstract String getVehicleType();
+
+    @Override
+    public String toString() {
+        return getVehicleType() + "(" + vehicleId + ", " + brand + ", " + model + ", $" + pricePerDay + "/day)";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return vehicleId == vehicle.vehicleId &&
+                Double.compare(vehicle.pricePerDay, pricePerDay) == 0 &&
+                Objects.equals(brand, vehicle.brand) &&
+                Objects.equals(model, vehicle.model);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vehicleId, brand, model, pricePerDay);
+    }
+}
+
+class Car extends Vehicle {
+    public Car(int vehicleId, String brand, String model, double pricePerDay) {
+        super(vehicleId, brand, model, pricePerDay);
+    }
+
+    @Override
+    public String getVehicleType() {
+        return "Car";
+    }
+}
+
+class Customer {
+    private int customerId;
+    private String name;
+    private String phone;
+
+    public Customer(int customerId, String name, String phone) {
+        this.customerId = customerId;
+        this.name = name;
+        this.phone = phone;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer(" + customerId + ", " + name + ", " + phone + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return customerId == customer.customerId &&
+                Objects.equals(name, customer.name) &&
+                Objects.equals(phone, customer.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(customerId, name, phone);
+    }
+}
+
+class RentalService {
+    private int serviceId;
+    private Vehicle vehicle;
+    private Customer customer;
+    private int rentalDays;
+
+    public RentalService(int serviceId, Vehicle vehicle, Customer customer, int rentalDays) {
+        this.serviceId = serviceId;
+        this.vehicle = vehicle;
+        this.customer = customer;
+        this.rentalDays = rentalDays;
+    }
+
+    public int getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(int serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public int getRentalDays() {
+        return rentalDays;
+    }
+
+    public void setRentalDays(int rentalDays) {
+        this.rentalDays = rentalDays;
+    }
+
+    public double calculateTotalCost() {
+        return vehicle.getPricePerDay() * rentalDays;
+    }
+
+    @Override
+    public String toString() {
+        return "RentalService(" +
+                serviceId + ", Vehicle: " + vehicle +
+                ", Customer: " + customer +
+                ", Days: " + rentalDays +
+                ", Total Cost: $" + calculateTotalCost() + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RentalService that = (RentalService) o;
+        return serviceId == that.serviceId &&
+                rentalDays == that.rentalDays &&
+                Objects.equals(vehicle, that.vehicle) &&
+                Objects.equals(customer, that.customer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serviceId, vehicle, customer, rentalDays);
+    }
+}
+
+public class VehicleRentalSystem {
+    public static void main(String[] args) {
+        Vehicle vehicle1 = new Car(1, "Toyota", "Corolla", 50);
+        Vehicle vehicle2 = new Car(2, "Honda", "Accord", 55);
+
+        Customer customer1 = new Customer(101, "Dias", "123-456-7890");
+        Customer customer2 = new Customer(102, "Bay Adam", "987-654-3210");
+
+        RentalService rental1 = new RentalService(1001, vehicle1, customer1, 5);
+        RentalService rental2 = new RentalService(1002, vehicle2, customer2, 3);
+
+        System.out.println(rental1);
+        System.out.println(rental2);
+
+        if (vehicle1.getPricePerDay() < vehicle2.getPricePerDay()) {
+            System.out.println(vehicle1.getBrand() + " " + vehicle1.getModel() + " is cheaper than " +
+                    vehicle2.getBrand() + " " + vehicle2.getModel());
+        } else {
+            System.out.println(vehicle2.getBrand() + " " + vehicle2.getModel() + " is cheaper than " +
+                    vehicle1.getBrand() + " " + vehicle1.getModel());
+        }
+    }
+}
